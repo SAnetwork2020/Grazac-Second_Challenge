@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:second_challenge/soda/demo_screens/sign_in/signin_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NavigationDrawer extends StatelessWidget {
-   NavigationDrawer({Key? key}) : super(key: key);
+   NavigationDrawer({Key? key, required this.username}) : super(key: key);
+   final String username;
   final List<Map<dynamic,dynamic>> myDrawer =[
     {
       'leading': Icons.home_rounded,
@@ -23,9 +26,7 @@ class NavigationDrawer extends StatelessWidget {
       'leading': Icons.help_rounded,
       'title':'About'
     },
-
   ];
-
   @override
   Widget build(BuildContext context) {
     return  Drawer(
@@ -47,7 +48,7 @@ class NavigationDrawer extends StatelessWidget {
               ),
               const SizedBox(height: 16,),
               const Text('Welcome: Roboto Olawale'),
-              const Text('snetwork@gmail.com'),
+              Text('$username'),
             ],
           ),
           const SizedBox(height: 16,),
@@ -62,7 +63,7 @@ class NavigationDrawer extends StatelessWidget {
                   tileColor: Colors.transparent,
                     leading: Icon(myDrawer[index]['leading']),
                   title: Text('${myDrawer[index]['title']}'),
-                  trailing: Icon(Icons.arrow_forward_ios_rounded),
+                  trailing: const Icon(Icons.arrow_forward_ios_rounded),
                 ),
               ), separatorBuilder: (BuildContext context, int index)
             =>const SizedBox(height: 20,),
@@ -70,7 +71,12 @@ class NavigationDrawer extends StatelessWidget {
           ),
           SizedBox(height: 56, width: double.infinity,
             child: ElevatedButton.icon(
-                onPressed: (){},
+                onPressed: ()async{
+                  final prefs = await SharedPreferences.getInstance();
+                  prefs.setBool('showHome', false);
+                  Navigator.pushReplacement(context, MaterialPageRoute
+                    (builder: (context)=>const SignInScreen()));
+                },
                 label: const Text('Log Out'),
               icon: const Icon(Icons.logout) ,
             ),
